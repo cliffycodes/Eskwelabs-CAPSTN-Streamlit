@@ -62,16 +62,18 @@ if st.button("🔮 Predict Risk"):
             'm14 - number of antenatal visits during pregnancy': m14
         }
 
-        # Correct ordinal mapping for wealth index
-        wealth_mapping = {
-            "Poorest": 1,
-            "Poorer": 2,
-            "Middle": 3,
-            "Richer": 4,
-            "Richest": 5
+        
+        # Reverse wealth index meaning
+        reverse_mapping = {
+            "Poorest": "Richest",
+            "Poorer": "Richer",
+            "Middle": "Middle",
+            "Richer": "Poorer",
+            "Richest": "Poorest"
         }
+
         ordinal_inputs = {
-            'v190 - wealth index combined': wealth_mapping[v190]
+            'v190 - wealth index combined': reverse_mapping[v190]
         }
 
         # Combine all inputs
