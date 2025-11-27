@@ -1,33 +1,20 @@
+
 import streamlit as st
 import pandas as pd
 import joblib
-import time
-import os
 
 # -------------------------
-# APP VARIABLES FOR TWEAKING/UPDATES 
+# LOAD MODEL
 # -------------------------
-app_new_min = 1
-app_new_max = 5
-
-
-# -------------------------
-# LOAD MODELS WITH FRONT END 
-# -------------------------
-
-
 @st.cache_resource
 def load_model():
     return joblib.load("child_recode_model.pkl")
 
 pipeline = load_model()
 
-
 # -------------------------
-# FRONT END / QUESTIONNAIRE 
+# FRONT END / QUESTIONNAIRE
 # -------------------------
-
-
 st.title("Infant Mortality Risk Prediction")
 
 st.markdown(
@@ -39,7 +26,6 @@ st.markdown(
 
 # 🩺 Prenatal Care Indicators (Boolean)
 st.header("🩺 Prenatal Care Indicators")
-
 m42c = st.checkbox("During pregnancy: Was blood pressure taken?")
 m42d = st.checkbox("During pregnancy: Was urine sample taken?")
 m57a = st.checkbox("Antenatal care provided at respondent's home?")
@@ -47,33 +33,13 @@ v170 = st.checkbox("Does the mother have an account in a bank or financial insti
 
 # 👨‍👩‍👧 Household & Pregnancy Details (Numeric)
 st.header("👨‍👩‍👧 Household & Pregnancy Details")
-
-v136 = st.number_input(
-    "Number of household members (listed):",
-    min_value=1, max_value=30, value=5, step=1
-)
-
-bord = st.number_input(
-    "Birth order number:",
-    min_value=1, max_value=20, value=1, step=1
-)
-
-m14 = st.number_input(
-    "Number of antenatal visits during pregnancy:",
-    min_value=0, max_value=50, value=4, step=1
-)
+v136 = st.number_input("Number of household members (listed):", min_value=1, max_value=30, value=5, step=1)
+bord = st.number_input("Birth order number:", min_value=1, max_value=20, value=1, step=1)
+m14 = st.number_input("Number of antenatal visits during pregnancy:", min_value=0, max_value=50, value=4, step=1)
 
 # 💰 Socioeconomic Status (Ordinal)
 st.header("💰 Socioeconomic Status")
-
-v190 = st.selectbox(
-    "Wealth index combined:",
-    ["Poorest", "Poorer", "Middle", "Richer", "Richest"]
-)
-
-
-
-
+v190 = st.selectbox("Wealth index combined:", ["Poorest", "Poorer", "Middle", "Richer", "Richest"])
 
 # -------------------------
 # Prediction Button
@@ -81,59 +47,20 @@ v190 = st.selectbox(
 if st.button("🔮 Predict Risk"):
     with st.spinner("Predicting infant mortality risk..."):
 
-        # -------------------------
-        # Group Inputs by Type
-        # -------------------------
+        # Boolean inputs (convert to int)
         bool_inputs = {
-            'm42c - during pregnancy: blood pressure taken': m42c,
-            'm42d - during pregnancy: urine sample taken': m42d,
-            'm57a - antenatal care: respondent\'s home': m57a,
-            'v170 - has an account in a bank or other financial institution': v170
+            'm42c - during pregnancy: blood pressure taken': int(m42c),
+            'm42d - during pregnancy: urine sample taken': int(m42d),
+            'm57a - antenatal care: respondent\'s home': int(m57a),
+            'v170 - has an account in a bank or other financial institution': int(v170)
         }
 
+        # Numeric inputs
         num_inputs = {
             'v136 - number of household members (listed)': v136,
             'bord - birth order number': bord,
             'm14 - number of antenatal visits during pregnancy': m14
         }
-
-        ordinal_inputs = {
-            'v190 - wealth index combined': v190
-        }
-
-        # Combine all inputs
-        all_inputs = {**bool_inputs, **num_inputs, **ordinal_inputs}
-        input_df = pd.DataFrame([all_inputs])
-
-        # -------------------------
-        # Predict
-        # -------------------------
-        y_pred = pipeline.predict(input_df)[0]           # ✅ scalar prediction
-        y_prob = pipeline.predict_proba(input_df)[0][1]  # ✅ probability of class 1 (infant death)
-
-
-# -------------------------
-# Prediction Button
-# -------------------------
-if st.button("🔮 Predict Risk"):
-    with st.spinner("Predicting infant mortality risk..."):
-
-        # -------------------------
-        # Group Inputs by Type
-        # -------------------------
-        bool_inputs = {
-            'm42c - during pregnancy: blood pressure taken': m42c,
-            'm42d - during pregnancy: urine sample taken': m42d,
-            'm57a - antenatal care: respondent\'s home': m57a,
-            'v170 - has an account in a bank or other financial institution': v170
-        }
-
-        num_inputs = {
-            'v136 - number of household members (listed)': v136,
-            'bord - birth order number': bord,
-            'm14 - number of antenatal visits during pregnancy': m14
-        }
-
 
         # Correct ordinal mapping for wealth index
         wealth_mapping = {
@@ -143,21 +70,17 @@ if st.button("🔮 Predict Risk"):
             "Richer": 4,
             "Richest": 5
         }
-
-ordinal_inputs = {
-    'v190 - wealth index combined': wealth_mapping[v190]
-}
-
+        ordinal_inputs = {
+            'v190 - wealth index combined': wealth_mapping[v190]
+        }
 
         # Combine all inputs
         all_inputs = {**bool_inputs, **num_inputs, **ordinal_inputs}
         input_df = pd.DataFrame([all_inputs])
 
-        # -------------------------
         # Predict
-        # -------------------------
         y_pred = pipeline.predict(input_df)[0]
-        y_prob = pipeline.predict_proba(input_df)[0][1]  # Probability of infant death
+        y_prob = pipeline.predict_proba(input_df)[0][1]
 
     # -------------------------
     # Risk Categorization
@@ -172,14 +95,11 @@ ordinal_inputs = {
         risk_level = "High Risk"
         color = "red"
 
-    # ✅ Display results
+    
     st.markdown(f"### Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
     st.write(f"Estimated probability of infant mortality: **{y_prob*100:.2f}%**")
 
-    # # -------------------------
-    # # Debug: show all inputs
-    # # -------------------------
-    st.subheader("🔍 Debug: Inputs Sent to Model")
-    st.dataframe(input_df)  # shows values and column names
-    st.write("Column types:", input_df.dtypes)  # shows data types
 
+    st.subheader("🔍 Debug: Inputs Sent to Model")
+    st.dataframe(input_df)
+    st.write("Column types:", input_df.dtypes)
