@@ -30,189 +30,48 @@ pipeline = load_model()
 # FRONT END / QUESTIONNAIRE 
 # -------------------------
 
-st.title("Student PISA 2022 Proficiency Prediction")
+
+st.title("Infant Mortality Risk Prediction")
 
 st.markdown(
     """
-    This project allows you to predict a student's proficiency level in the PISA 2022 assessment 
-    based on their personal, family, school, and social-emotional factors. 
-    Please answer the questions below as accurately as possible to generate the prediction.
+    This tool predicts the risk of infant mortality (0-11 months) based on prenatal factors.
+    Please provide accurate information about the pregnancy and household context.
     """
 )
 
-# 🌍 Demographics & Background
-st.header("🌍 Demographics & Background")
+# 🩺 Prenatal Care Indicators (Boolean)
+st.header("🩺 Prenatal Care Indicators")
 
-LANGN = st.selectbox(
-    "What language does the student speak most often at home?",
-    [
-        "Filipino/Tagalog", "Cebuano/Bisaya", "Hiligaynon/Ilonggo", "Bikolano",
-        "English", "Kapampangan", "Waray", "Pangasinan", "Other/Minor",
-        "Maguindanao", "Ilocano", "Tausug", "Maranao", "Chavacano"
-    ]
+m42c = st.checkbox("During pregnancy: Was blood pressure taken?")
+m42d = st.checkbox("During pregnancy: Was urine sample taken?")
+m57a = st.checkbox("Antenatal care provided at respondent's home?")
+v170 = st.checkbox("Does the mother have an account in a bank or financial institution?")
+
+# 👨‍👩‍👧 Household & Pregnancy Details (Numeric)
+st.header("👨‍👩‍👧 Household & Pregnancy Details")
+
+v136 = st.number_input(
+    "Number of household members (listed):",
+    min_value=1, max_value=30, value=5, step=1
 )
 
-HISEI = st.number_input(
-    "What is the highest occupational level of the student's parents? "
-    "(1 = Elementary occupations such as service or manual jobs, "
-    "5 = Professional/managerial occupations)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
+bord = st.number_input(
+    "Birth order number:",
+    min_value=1, max_value=20, value=1, step=1
 )
 
-MISCED = st.selectbox(
-    "What is the mother’s highest education level?",
-    [
-        "Less than primary", "Primary education", "Lower secondary", "Upper secondary",
-        "Post-secondary non-tertiary", "Short-cycle tertiary", "Bachelor’s or equivalent",
-        "Master’s or equivalent", "Doctoral or equivalent"
-    ]
+m14 = st.number_input(
+    "Number of antenatal visits during pregnancy:",
+    min_value=0, max_value=50, value=4, step=1
 )
 
-FISCED = st.selectbox(
-    "What is the father’s highest education level?",
-    [
-        "Less than primary", "Primary education", "Lower secondary", "Upper secondary",
-        "Post-secondary non-tertiary", "Short-cycle tertiary", "Bachelor’s or equivalent",
-        "Master’s or equivalent", "Doctoral or equivalent"
-    ]
-)
+# 💰 Socioeconomic Status (Ordinal)
+st.header("💰 Socioeconomic Status")
 
-HOMEPOS = st.number_input(
-    "How many household items or resources does the student’s family have at home? "
-    "(This includes durable goods such as a study desk, books, internet connection, etc. "
-    "1 = Very few possessions, 5 = Many possessions)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-ICTRES = st.number_input(
-    "How many technological resources are available to the student at home or at school? "
-    "(1 = Very limited access, 5 = Many technological resources)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-# 💬 Social-Emotional & School Climate
-st.header("💬 Social-Emotional & School Climate")
-
-BULLIED = st.number_input(
-    "How often has the student experienced bullying at school? "
-    "(1 = Never, 5 = Very frequently)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-INFOSEEK = st.number_input(
-    "How often does the student actively seek out information for learning? "
-    "(1 = Rarely, 5 = Very frequently)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-SCHRISK = st.number_input(
-    "How safe does the student feel at school? "
-    "(1 = Very safe, 5 = Very unsafe/disorderly environment)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-DISCLIM = st.number_input(
-    "How would the student describe the classroom’s disciplinary climate? "
-    "(1 = Very orderly, 5 = Very disorderly)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-BELONG = st.number_input(
-    "How strongly does the student feel a sense of belonging at school? "
-    "(1 = Feels very isolated, 5 = Strong sense of belonging)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-FAMSUP = st.number_input(
-    "How supportive is the student’s family of their learning? "
-    "(1 = Very unsupportive, 5 = Very supportive)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-# 💡 Cognitive, Creativity & Attitudes
-st.header("💡 Cognitive, Creativity & Attitudes")
-
-CREATAS = st.number_input(
-    "How creative is the student in completing assigned schoolwork? "
-    "(1 = Very creative, 5 = Not creative at all)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-CREATFAM = st.number_input(
-    "How much does the student’s family encourage creativity? "
-    "(1 = Not at all, 5 = Very much)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-OPENART = st.number_input(
-    "How open is the student to artistic and cultural experiences? "
-    "(1 = Not open, 5 = Very open)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-CREATSCH = st.number_input(
-    "How many opportunities for creativity does the student have at school? "
-    "(1 = Very few, 5 = Many opportunities)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-CREATOOS = st.number_input(
-    "How much does the student engage in creative activities outside of school? "
-    "(1 = Very active in creativity outside school, 5 = Not active at all)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-COGACRCO = st.number_input(
-    "How often does the student participate in reasoning-based learning activities? "
-    "(1 = Rarely, 5 = Very frequently)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-EXPOFA = st.number_input(
-    "How much exposure does the student have to future-oriented activities "
-    "(e.g., career talks, internships)? (1 = Very little, 5 = A lot)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-MATHPERS = st.number_input(
-    "How perseverant is the student in solving mathematics tasks? "
-    "(1 = Gives up easily, 5 = Keeps trying until successful)",
-    min_value=1.0, max_value=5.0, value=3.0, step=0.1
-)
-
-# 🕓 Student Background & Engagement
-st.header("🕓 Student Background & Engagement")
-
-WORKPAY = st.number_input(
-    "How many hours does the student spend in paid work outside school? "
-    "(1 = No paid work, 5 = Works many hours per week)",
-    min_value=1.0, max_value=5.0, value=2.0, step=0.1
-)
-
-REPEAT = st.checkbox("Has the student ever repeated a grade?")
-
-MISSSC = st.checkbox("Has the student missed several days of school (absenteeism)?")
-
-# 🏫 School Context & Career Orientation
-st.header("🏫 School Context & Career Orientation")
-
-school_type = st.selectbox(
-    "What type of school does the student attend?",
-    ["Public", "Private (Govt-Dependent)", "Private (Independent)"]
-)
-
-urban_rural_proxy = st.selectbox(
-    "Where is the student’s school located?",
-    ["Urban", "Rural", "Semi-urban"]
-)
-
-OCOD1_major_label = st.selectbox(
-    "What career or occupational cluster is the student most interested in?",
-    [
-        "No response", "Elementary Occupations", "Service & Sales Workers", "Professionals",
-        "Technicians & Associate Professionals", "Managers", "Skilled Agricultural Workers",
-        "Craft & Related Trades Workers", "Clerical Support Workers", "Plant & Machine Operators"
-    ]
+v190 = st.selectbox(
+    "Wealth index combined:",
+    ["Poorest", "Poorer", "Middle", "Richer", "Richest"]
 )
 
 # -------------------------
