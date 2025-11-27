@@ -134,9 +134,20 @@ if st.button("🔮 Predict Risk"):
             'm14 - number of antenatal visits during pregnancy': m14
         }
 
-        ordinal_inputs = {
-            'v190 - wealth index combined': v190
+
+        # Correct ordinal mapping for wealth index
+        wealth_mapping = {
+            "Poorest": 1,
+            "Poorer": 2,
+            "Middle": 3,
+            "Richer": 4,
+            "Richest": 5
         }
+
+ordinal_inputs = {
+    'v190 - wealth index combined': wealth_mapping[v190]
+}
+
 
         # Combine all inputs
         all_inputs = {**bool_inputs, **num_inputs, **ordinal_inputs}
