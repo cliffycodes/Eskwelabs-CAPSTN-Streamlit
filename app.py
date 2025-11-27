@@ -14,18 +14,15 @@ app_new_max = 5
 # -------------------------
 # LOAD MODELS WITH FRONT END 
 # -------------------------
-# @st.cache_resource
-# def load_model():
-#     model_path = os.path.join("model", "final_knn_pipeline_raw.pkl")
-#     return joblib.load(model_path)
 
-# pipeline = load_model()
 
 @st.cache_resource
 def load_model():
-    return joblib.load("final_knn_pipeline_raw.pkl")
+    return joblib.load("child_recode_model.pkl")
 
 pipeline = load_model()
+
+
 # -------------------------
 # FRONT END / QUESTIONNAIRE 
 # -------------------------
@@ -74,121 +71,56 @@ v190 = st.selectbox(
     ["Poorest", "Poorer", "Middle", "Richer", "Richest"]
 )
 
-# -------------------------
-# Variable Conversions
-# -------------------------
-# Numerical : Scale to old ranges + StandardScaling
-# Categorical: One Hot encoding
-# Boolean: Keep as is
-
-
-
-#------------ Numerical----------- #
-
-
-### Scaling conversion for numerical values (from 1-5 to the old actual data range) ###
-# Function for conversion from new min max (1-5) to old min max 
-def rescale_to_original(y_input, old_min, old_max, new_min=1.0, new_max=5.0):
-\
-    # cap the input between new_min and new_max
-    y_capped = max(new_min, min(y_input, new_max))
-
-    # linear rescale back to original
-    x_original = old_min + (y_capped - new_min) * (old_max - old_min) / (new_max - new_min)
-    return x_original
-
-
-
-
 
 
 
 
 # -------------------------
-# Prediction button
+# Prediction Button
 # -------------------------
-if st.button("🔮 Predict"):
-    with st.spinner("Predicting proficiency..."):
-
-        # -------------------------
-        # Rescale numerical inputs
-        # -------------------------
-        HISEI_CONVERTED     = rescale_to_original(HISEI, 11.01, 88.70, app_new_min, app_new_max)
-        HOMEPOS_CONVERTED   = rescale_to_original(HOMEPOS, -7.863, 2.714, app_new_min, app_new_max)
-        ICTRES_CONVERTED    = rescale_to_original(ICTRES, -5.060, 5.143, app_new_min, app_new_max)
-        BULLIED_CONVERTED   = rescale_to_original(BULLIED, -1.228, 4.694, app_new_min, app_new_max)
-        INFOSEEK_CONVERTED  = rescale_to_original(INFOSEEK, -2.421, 2.599, app_new_min, app_new_max)
-        SCHRISK_CONVERTED   = rescale_to_original(SCHRISK, -0.639, 3.649, app_new_min, app_new_max)
-        DISCLIM_CONVERTED   = rescale_to_original(DISCLIM, -2.493, 1.851, app_new_min, app_new_max)
-        BELONG_CONVERTED    = rescale_to_original(BELONG, -3.258, 2.756, app_new_min, app_new_max)
-        FAMSUP_CONVERTED    = rescale_to_original(FAMSUP, -3.063, 1.958, app_new_min, app_new_max)
-        CREATAS_CONVERTED   = rescale_to_original(CREATAS, -1.121, 4.353, app_new_min, app_new_max)
-        CREATFAM_CONVERTED  = rescale_to_original(CREATFAM, -2.789, 2.239, app_new_min, app_new_max)
-        OPENART_CONVERTED   = rescale_to_original(OPENART, -2.815, 1.903, app_new_min, app_new_max)
-        CREATSCH_CONVERTED  = rescale_to_original(CREATSCH, -2.623, 2.814, app_new_min, app_new_max)
-        CREATOOS_CONVERTED  = rescale_to_original(CREATOOS, -0.821, 4.774, app_new_min, app_new_max)
-        COGACRCO_CONVERTED  = rescale_to_original(COGACRCO, -2.862, 3.720, app_new_min, app_new_max)
-        EXPOFA_CONVERTED    = rescale_to_original(EXPOFA, -2.085, 2.640, app_new_min, app_new_max)
-        MATHPERS_CONVERTED  = rescale_to_original(MATHPERS, -3.096, 2.849, app_new_min, app_new_max)
-        WORKPAY_CONVERTED   = rescale_to_original(WORKPAY, 0.0, 10.0, app_new_min, app_new_max)
+if st.button("🔮 Predict Risk"):
+    with st.spinner("Predicting infant mortality risk..."):
 
         # -------------------------
         # Group Inputs by Type
         # -------------------------
         bool_inputs = {
-            "REPEAT": REPEAT,
-            "MISSSC": MISSSC,
-        }
-
-        cat_inputs = {
-            "MISCED": MISCED,   
-            "FISCED": FISCED,
-            "LANGN": LANGN,
-            "school_type": school_type,
-            "urban_rural_proxy": urban_rural_proxy,
-            "OCOD1_major_label": OCOD1_major_label,
+            'm42c - during pregnancy: blood pressure taken': m42c,
+            'm42d - during pregnancy: urine sample taken': m42d,
+            'm57a - antenatal care: respondent\'s home': m57a,
+            'v170 - has an account in a bank or other financial institution': v170
         }
 
         num_inputs = {
-            "ICTRES": ICTRES_CONVERTED,
-            "HISEI": HISEI_CONVERTED,
-            "BULLIED": BULLIED_CONVERTED,
-            "INFOSEEK": INFOSEEK_CONVERTED,
-            "CREATAS": CREATAS_CONVERTED,
-            "HOMEPOS": HOMEPOS_CONVERTED,
-            "MATHPERS": MATHPERS_CONVERTED,
-            "CREATFAM": CREATFAM_CONVERTED,
-            "OPENART": OPENART_CONVERTED,
-            "SCHRISK": SCHRISK_CONVERTED,
-            "WORKPAY": WORKPAY_CONVERTED,
-            "CREATSCH": CREATSCH_CONVERTED,
-            "DISCLIM": DISCLIM_CONVERTED,
-            "BELONG": BELONG_CONVERTED,
-            "CREATOOS": CREATOOS_CONVERTED,
-            "COGACRCO": COGACRCO_CONVERTED,
-            "EXPOFA": EXPOFA_CONVERTED,
-            "FAMSUP": FAMSUP_CONVERTED,
+            'v136 - number of household members (listed)': v136,
+            'bord - birth order number': bord,
+            'm14 - number of antenatal visits during pregnancy': m14
         }
 
-        all_inputs = {**bool_inputs, **cat_inputs, **num_inputs}
+        ordinal_inputs = {
+            'v190 - wealth index combined': v190
+        }
+
+        # Combine all inputs
+        all_inputs = {**bool_inputs, **num_inputs, **ordinal_inputs}
         input_df = pd.DataFrame([all_inputs])
 
         # -------------------------
         # Predict
         # -------------------------
-        y_pred = pipeline.predict(input_df)[0]         # ✅ scalar
-        y_prob = pipeline.predict_proba(input_df)[0][1] # ✅ probability of class 1
+        y_pred = pipeline.predict(input_df)[0]           # ✅ scalar prediction
+        y_prob = pipeline.predict_proba(input_df)[0][1]  # ✅ probability of class 1 (infant death)
 
     # ✅ Display results after spinner closes
-    if y_pred == 1:   # ✅ fixed: no extra indexing
-        st.success(f"✅ Predicted: **Proficient**\n\nThis student has a **{y_prob*100:.2f}%** chance of being proficient.")
+    if y_pred == 1:
+        st.error(f"❌ High Risk: Infant mortality predicted.\n\nEstimated probability: **{y_prob*100:.2f}%**")
     else:
-        st.error(f"❌ Predicted: **Not Proficient**\n\nThis student has only a **{y_prob*100:.2f}%** chance of being proficient.")
+        st.success(f"✅ Low Risk: Infant mortality not predicted.\n\nEstimated probability: **{y_prob*100:.2f}%**")
 
     # # -------------------------
     # # Debug: show all inputs
     # # -------------------------
-    # st.subheader("🔍 Debug: Inputs Sent to Model")
-    # st.dataframe(input_df)  # shows values and column names
-    # st.write("Column types:", input_df.dtypes)  # shows data types
+    st.subheader("🔍 Debug: Inputs Sent to Model")
+    st.dataframe(input_df)  # shows values and column names
+    st.write("Column types:", input_df.dtypes)  # shows data types
 
