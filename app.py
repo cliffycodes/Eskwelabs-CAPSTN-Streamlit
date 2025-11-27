@@ -111,11 +111,59 @@ if st.button("🔮 Predict Risk"):
         y_pred = pipeline.predict(input_df)[0]           # ✅ scalar prediction
         y_prob = pipeline.predict_proba(input_df)[0][1]  # ✅ probability of class 1 (infant death)
 
-    # ✅ Display results after spinner closes
-    if y_pred == 1:
-        st.error(f"❌ High Risk: Infant mortality predicted.\n\nEstimated probability: **{y_prob*100:.2f}%**")
+
+# -------------------------
+# Prediction Button
+# -------------------------
+if st.button("🔮 Predict Risk"):
+    with st.spinner("Predicting infant mortality risk..."):
+
+        # -------------------------
+        # Group Inputs by Type
+        # -------------------------
+        bool_inputs = {
+            'm42c - during pregnancy: blood pressure taken': m42c,
+            'm42d - during pregnancy: urine sample taken': m42d,
+            'm57a - antenatal care: respondent\'s home': m57a,
+            'v170 - has an account in a bank or other financial institution': v170
+        }
+
+        num_inputs = {
+            'v136 - number of household members (listed)': v136,
+            'bord - birth order number': bord,
+            'm14 - number of antenatal visits during pregnancy': m14
+        }
+
+        ordinal_inputs = {
+            'v190 - wealth index combined': v190
+        }
+
+        # Combine all inputs
+        all_inputs = {**bool_inputs, **num_inputs, **ordinal_inputs}
+        input_df = pd.DataFrame([all_inputs])
+
+        # -------------------------
+        # Predict
+        # -------------------------
+        y_pred = pipeline.predict(input_df)[0]
+        y_prob = pipeline.predict_proba(input_df)[0][1]  # Probability of infant death
+
+    # -------------------------
+    # Risk Categorization
+    # -------------------------
+    if y_prob < 0.33:
+        risk_level = "Low Risk"
+        color = "green"
+    elif y_prob < 0.66:
+        risk_level = "Medium Risk"
+        color = "orange"
     else:
-        st.success(f"✅ Low Risk: Infant mortality not predicted.\n\nEstimated probability: **{y_prob*100:.2f}%**")
+        risk_level = "High Risk"
+        color = "red"
+
+    # ✅ Display results
+    st.markdown(f"### Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
+    st.write(f"Estimated probability of infant mortality: **{y_prob*100:.2f}%**")
 
     # # -------------------------
     # # Debug: show all inputs
