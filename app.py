@@ -6,7 +6,6 @@ import joblib
 # -------------------------
 # LOAD MODEL
 # -------------------------
-load_model.clear()  # clears @st.cache_resource for this function
 @st.cache_resource
 def load_model():
     return joblib.load("child_recode_model.pkl")
