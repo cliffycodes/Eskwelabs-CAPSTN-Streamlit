@@ -3,9 +3,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# -------------------------
-# LOAD MODEL
-# -------------------------
+
 
 @st.cache_resource
 def load_model():
@@ -13,9 +11,7 @@ def load_model():
 
 pipeline = load_model()
 
-# -------------------------
-# FRONT END / QUESTIONNAIRE
-# -------------------------
+
 st.title("Infant Mortality Risk Prediction")
 
 st.markdown(
@@ -25,36 +21,35 @@ st.markdown(
     """
 )
 
-# 🩺 Prenatal Care Indicators (Boolean)
-st.header("🩺 Prenatal Care Indicators")
-v170 = st.checkbox("Does the mother have an account in a bank or financial institution?")
 
-# 👨‍👩‍👧 Household & Pregnancy Details (Numeric)
-st.header("👨‍👩‍👧 Household & Pregnancy Details")
-v136 = st.number_input("Number of household members (listed):", min_value=1, max_value=30, value=5, step=1)
-bord = st.number_input("Birth order number:", min_value=1, max_value=20, value=1, step=1)
-m14 = st.number_input("Number of antenatal visits during pregnancy:", min_value=0, max_value=50, value=4, step=1)
 
-# 💰 Socioeconomic Status (Ordinal)
 st.header("💰 Socioeconomic Status")
-v190 = st.selectbox("Wealth index combined:", ["Poorest", "Poorer", "Middle", "Richer", "Richest"])
+v170 = st.checkbox("Does the mother have a bank account?")
+v190 = st.selectbox("What is the household's wealth level?", ["Poorest", "Poorer", "Middle", "Richer", "Richest"])
 
-# -------------------------
-# Prediction Button
-# -------------------------
+
+st.header("👨‍👩‍👧 Household & Pregnancy Details")
+v136 = st.number_input("How many people live in the household?", min_value=1, max_value=30, value=5, step=1)
+bord = st.number_input("What is the birth order of this child?", min_value=1, max_value=20, value=1, step=1)
+m14 = st.number_input("How many antenatal visits did the mother have?", min_value=0, max_value=50, value=4, step=1)
+
+
+
+
+
+
 if st.button("🔮 Predict Risk"):
     
-    load_model.clear()  # clears @st.cache_resource for this function
+    load_model.clear()  
     pipeline = load_model()
 
     with st.spinner("Predicting infant mortality risk..."):
 
-        # Boolean inputs (convert to int)
+
         bool_inputs = {
             'v170 - has an account in a bank or other financial institution': int(v170)
         }
 
-        # Numeric inputs
         num_inputs = {
             'v136 - number of household members (listed)': v136,
             'bord - birth order number': bord,
@@ -62,7 +57,7 @@ if st.button("🔮 Predict Risk"):
         }
 
         
-        # Reverse wealth index meaning
+
         reverse_mapping = {
             "Poorest": "Richest",
             "Poorer": "Richer",
@@ -86,10 +81,10 @@ if st.button("🔮 Predict Risk"):
     # -------------------------
     # Risk Categorization
     # -------------------------
-    if y_prob < 0.33:
+    if y_prob < 0.30:
         risk_level = "Low Risk"
         color = "green"
-    elif y_prob < 0.66:
+    elif y_prob < 0.70:
         risk_level = "Medium Risk"
         color = "orange"
     else:
