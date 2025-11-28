@@ -27,8 +27,6 @@ st.markdown(
 # 🩺 Prenatal Care Indicators (Boolean)
 st.header("🩺 Prenatal Care Indicators")
 m42c = st.checkbox("During pregnancy: Was blood pressure taken?")
-m42d = st.checkbox("During pregnancy: Was urine sample taken?")
-m57a = st.checkbox("Antenatal care provided at respondent's home?")
 v170 = st.checkbox("Does the mother have an account in a bank or financial institution?")
 
 # 👨‍👩‍👧 Household & Pregnancy Details (Numeric)
@@ -50,8 +48,6 @@ if st.button("🔮 Predict Risk"):
         # Boolean inputs (convert to int)
         bool_inputs = {
             'm42c - during pregnancy: blood pressure taken': int(m42c),
-            'm42d - during pregnancy: urine sample taken': int(m42d),
-            'm57a - antenatal care: respondent\'s home': int(m57a),
             'v170 - has an account in a bank or other financial institution': int(v170)
         }
 
