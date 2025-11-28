@@ -6,7 +6,7 @@ import joblib
 # -------------------------
 # LOAD MODEL
 # -------------------------
-
+@st.cache_resource  
 def load_model():
     return joblib.load("child_recode_model.pkl")
 
