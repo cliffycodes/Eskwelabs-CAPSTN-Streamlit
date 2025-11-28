@@ -6,7 +6,8 @@ import joblib
 # -------------------------
 # LOAD MODEL
 # -------------------------
-@st.cache_resource  
+
+@st.cache_resource
 def load_model():
     return joblib.load("child_recode_model.pkl")
 
@@ -26,7 +27,6 @@ st.markdown(
 
 # 🩺 Prenatal Care Indicators (Boolean)
 st.header("🩺 Prenatal Care Indicators")
-m42c = st.checkbox("During pregnancy: Was blood pressure taken?")
 v170 = st.checkbox("Does the mother have an account in a bank or financial institution?")
 
 # 👨‍👩‍👧 Household & Pregnancy Details (Numeric)
@@ -51,7 +51,6 @@ if st.button("🔮 Predict Risk"):
 
         # Boolean inputs (convert to int)
         bool_inputs = {
-            'm42c - during pregnancy: blood pressure taken': int(m42c),
             'v170 - has an account in a bank or other financial institution': int(v170)
         }
 
