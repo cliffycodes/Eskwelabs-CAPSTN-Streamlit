@@ -6,7 +6,7 @@ import joblib
 # -------------------------
 # LOAD MODEL
 # -------------------------
-@st.cache_resource
+
 def load_model():
     return joblib.load("child_recode_model.pkl")
 
@@ -43,6 +43,10 @@ v190 = st.selectbox("Wealth index combined:", ["Poorest", "Poorer", "Middle", "R
 # Prediction Button
 # -------------------------
 if st.button("🔮 Predict Risk"):
+    
+    load_model.clear()  # clears @st.cache_resource for this function
+    pipeline = load_model()
+
     with st.spinner("Predicting infant mortality risk..."):
 
         # Boolean inputs (convert to int)
