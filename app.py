@@ -90,22 +90,22 @@ if st.button("🔮 Predict Risk"):
     recs = []
 
 
-# Rule-based triggers from your EDA thresholds
-if bord > 4:
-    recs.append("Mother has more than 4 childbirths. Assess the mother's situation and provide family planning counseling. Advise on proper prenatal and antenatal care.")
-if m14 < 3:
-    recs.append("Mother has fewer than 3 antenatal care visits. Assess why this is the case and advise next steps or connect her to programs that can help increase visits.")
-if v136 < 3:
-    recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and link her to community or social programs for additional assistance.")
-if int(v170) == 0:
-    recs.append("Mother does not have a bank account. Assess financial barriers and connect her to financial services or cash support programs to reduce obstacles to care.")
+    # Rule-based triggers from your EDA thresholds
+    if bord > 4:
+        recs.append("Mother has more than 4 childbirths. Assess the mother's situation and provide family planning counseling. Advise on proper prenatal and antenatal care.")
+    if m14 < 3:
+        recs.append("Mother has fewer than 3 antenatal care visits. Assess why this is the case and advise next steps or connect her to programs that can help increase visits.")
+    if v136 < 3:
+        recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and link her to community or social programs for additional assistance.")
+    if int(v170) == 0:
+        recs.append("Mother does not have a bank account. Assess financial barriers and connect her to financial services or cash support programs to reduce obstacles to care.")
 
-# Wealth index recommendations (based on original selection `v190`, not the mapped value)
-if v190 in ["Poorest", "Poorer"]:
-    recs.extend([
-        "Costs may be a barrier for antenatal care, discuss free or low-cost services and community transport options.",
-        "Suggest local programs or organizations who may provided financial support."
-    ])
+    # Wealth index recommendations (based on original selection `v190`, not the mapped value)
+    if v190 in ["Poorest", "Poorer"]:
+        recs.extend([
+            "Costs may be a barrier for antenatal care, discuss free or low-cost services and community transport options.",
+            "Suggest local programs or organizations that may provided financial support."
+        ])
 
 
     # Deduplicate while preserving order
@@ -115,7 +115,7 @@ if v190 in ["Poorest", "Poorer"]:
     for r in recs:
         st.markdown(f"- {r}")
 
-    # Debug
-    st.subheader("🔍 Debug: Inputs Sent to Model")
-    st.dataframe(input_df)
-    st.write("Column types:", input_df.dtypes)
+    # # Debug
+    # st.subheader("🔍 Debug: Inputs Sent to Model")
+    # st.dataframe(input_df)
+    # st.write("Column types:", input_df.dtypes)
