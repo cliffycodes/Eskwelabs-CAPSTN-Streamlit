@@ -104,7 +104,7 @@ if int(v170) == 0:
 if v190 in ["Poorest", "Poorer"]:
     recs.extend([
         "Costs may be a barrier for antenatal care, discuss free or low-cost services and community transport options.",
-        "Suggest local programs or organizations who may provided financial support.",
+        "Suggest local programs or organizations who may provided financial support."
     ])
 
 
