@@ -96,7 +96,7 @@ if st.button("🔮 Predict Risk"):
     if m14 < 3:
         recs.append("Mother has fewer than 3 antenatal care visits. Assess why this is the case and advise next steps or connect her to programs that can help increase visits.")
     if v136 < 3:
-        recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and link her to community or social programs for additional assistance.")
+        recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and give guidance on how to manage.")
     if int(v170) == 0:
         recs.append("Mother does not have a bank account. Assess financial barriers and help connect her to financial services.")
 
