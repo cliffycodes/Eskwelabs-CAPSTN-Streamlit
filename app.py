@@ -98,7 +98,7 @@ if st.button("🔮 Predict Risk"):
     if v136 < 3:
         recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and link her to community or social programs for additional assistance.")
     if int(v170) == 0:
-        recs.append("Mother does not have a bank account. Assess financial barriers and connect her to financial services or cash support programs to reduce obstacles to care.")
+        recs.append("Mother does not have a bank account. Assess financial barriers and help connect her to financial services.")
 
     # Wealth index recommendations (based on original selection `v190`, not the mapped value)
     if v190 in ["Poorest", "Poorer"]:
