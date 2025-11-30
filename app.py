@@ -35,13 +35,6 @@ m14 = st.number_input("How many antenatal visits did the mother have?", min_valu
 
 
 
-
-
-
-import pandas as pd
-import numpy as np
-import streamlit as st
-
 if st.button("🔮 Predict Risk"):
     
     load_model.clear()  
@@ -96,32 +89,24 @@ if st.button("🔮 Predict Risk"):
     # ======================
     recs = []
 
-    # Base actions per risk level
-    if risk_level == "Low Risk":
-        recs.extend([
-            "Maintain ANC schedule (target ≥ 4 total visits).",
-            "Continue routine monitoring and health education."
-        ])
-    elif risk_level == "Medium Risk":
-        recs.extend([
-            "Schedule the next ANC visit immediately to reach ≥ 4 total visits.",
-            "Plan a follow-up check in 2–4 weeks (nutrition/infection screening)."
-        ])
-    else:  # High Risk
-        recs.extend([
-            "Urgent referral for same-week ANC and physician assessment.",
-            "Arrange transport/caregiver support; increase follow-up frequency."
-        ])
 
-    # Rule-based triggers from your EDA thresholds
-    if bord > 4:
-        recs.append("High childbirth order (>4): provide family planning counseling and close ANC follow-up.")
-    if m14 < 3:
-        recs.append("Low ANC (<3 visits): book the next ANC now and target at least 4 visits total.")
-    if v136 < 3:
-        recs.append("Small household (<3 members): mobilize family/community support and link to social programs.")
-    if int(v170) == 0:
-        recs.append("No bank account: connect to financial services or cash support to reduce barriers to care.")
+# Rule-based triggers from your EDA thresholds
+if bord > 4:
+    recs.append("Mother has more than 4 childbirths. Assess the mother's situation and provide family planning counseling. Advise on proper prenatal and antenatal care.")
+if m14 < 3:
+    recs.append("Mother has fewer than 3 antenatal care visits. Assess why this is the case and advise next steps or connect her to programs that can help increase visits.")
+if v136 < 3:
+    recs.append("Mother lives in a household with fewer than 3 members. Explore her support system and link her to community or social programs for additional assistance.")
+if int(v170) == 0:
+    recs.append("Mother does not have a bank account. Assess financial barriers and connect her to financial services or cash support programs to reduce obstacles to care.")
+
+# Wealth index recommendations (based on original selection `v190`, not the mapped value)
+if v190 in ["Poorest", "Poorer"]:
+    recs.extend([
+        "Costs may be a barrier for antenatal care, discuss free or low-cost services and community transport options.",
+        "Suggest local programs or organizations who may provided financial support.",
+    ])
+
 
     # Deduplicate while preserving order
     recs = list(dict.fromkeys(recs))
