@@ -31,7 +31,7 @@ wealth_levels = ["Poorest", "Poorer", "Middle", "Richer", "Richest"]
 v190 = st.selectbox(
     "What is the household's wealth level?",
     options=wealth_levels,
-    index=wealth_levels.index("Middle")  # safer than value="Middle"
+    index=wealth_levels.index("Poorer")  # safer than value="Middle"
 )
 
 
