@@ -92,7 +92,7 @@ if st.button("🔮 Predict Risk"):
 
 
     st.markdown(f"### Screening Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
-    st.write(f"Risk Score Infant Death Probability: **{y_prob*100:.2f}%**")
+    st.write(f"Infant Mortality Risk Score: **{y_prob*100:.2f}%**")
 
     # ======================
     # Recommendations section
