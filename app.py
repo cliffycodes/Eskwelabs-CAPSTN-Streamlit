@@ -77,7 +77,7 @@ if st.button("🔮 Predict Risk"):
         input_df = pd.DataFrame([all_inputs])
 
         y_pred = pipeline.predict(input_df)[0]
-        y_prob = float(pipeline.predict_proba(input_df)[0][1]) / 10
+        y_prob = float(pipeline.predict_proba(input_df)[0][1]) / 5
 
 
     if y_prob < 0.20:
@@ -92,7 +92,7 @@ if st.button("🔮 Predict Risk"):
 
 
     st.markdown(f"### Screening Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
-    st.write(f"Estimated probability of infant mortality: **{y_prob*100:.2f}%**")
+    st.write(f"Risk Score Infant Death Probability: **{y_prob*100:.2f}%**")
 
     # ======================
     # Recommendations section
