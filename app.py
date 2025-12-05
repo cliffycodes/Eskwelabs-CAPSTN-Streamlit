@@ -83,7 +83,7 @@ if st.button("🔮 Predict Risk"):
     if y_prob < 0.20:
         risk_level = "Low Risk"
         color = "green"
-    elif y_prob < 0.50:
+    elif y_prob < 0.30:
         risk_level = "Medium Risk"
         color = "orange"
     else:
