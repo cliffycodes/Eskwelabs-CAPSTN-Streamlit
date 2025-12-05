@@ -114,7 +114,7 @@ if st.button("🔮 Predict Risk"):
     if v190 in ["Poorest", "Poorer"]:
         recs.extend([
             "Costs may be a barrier for antenatal care, discuss free or low-cost services and community transport options.",
-            "Suggest local programs or organizations that may provided financial support."
+            "Suggest local programs or organizations that may provide financial support."
         ])
 
 
