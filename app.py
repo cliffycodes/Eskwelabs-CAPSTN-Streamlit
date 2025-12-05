@@ -24,7 +24,7 @@ st.markdown(
 
 
 st.header("💰 Socioeconomic Status")
-v170 = st.checkbox("Does the mother have a bank account?")
+v170 = st.checkbox("Does the mother have a bank account?",value=True)
 
 wealth_levels = ["Poorest", "Poorer", "Middle", "Richer", "Richest"]
 
@@ -78,18 +78,20 @@ if st.button("🔮 Predict Risk"):
 
         y_pred = pipeline.predict(input_df)[0]
         y_prob = float(pipeline.predict_proba(input_df)[0][1])
+        risk_level = y_prob/10
 
-    if y_prob < 0.30:
+    if y_prob < 0.20:
         risk_level = "Low Risk"
         color = "green"
-    elif y_prob < 0.70:
+    elif y_prob < 0.50:
         risk_level = "Medium Risk"
         color = "orange"
     else:
         risk_level = "High Risk"
         color = "red"
 
-    st.markdown(f"### Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
+
+    st.markdown(f"### Screening Risk Level: **<span style='color:{color}'>{risk_level}</span>**", unsafe_allow_html=True)
     st.write(f"Estimated probability of infant mortality: **{y_prob*100:.2f}%**")
 
     # ======================
