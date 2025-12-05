@@ -25,7 +25,7 @@ st.markdown(
 
 st.header("💰 Socioeconomic Status")
 v170 = st.checkbox("Does the mother have a bank account?")
-v190 = st.selectbox("What is the household's wealth level?", ["Poorest", "Poorer", "Middle", "Richer", "Richest"])
+v190 = st.selectbox("What is the household's wealth level?", ["Poorest", "Poorer", "Middle", "Richer", "Richest"],value="Middle")
 
 
 st.header("👨‍👩‍👧 Household & Pregnancy Details")
