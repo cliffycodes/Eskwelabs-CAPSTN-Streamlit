@@ -78,7 +78,7 @@ if st.button("🔮 Predict Risk"):
 
         y_pred = pipeline.predict(input_df)[0]
         y_prob = float(pipeline.predict_proba(input_df)[0][1])
-        risk_level = y_prob/10
+        risk_level = y_prob/12
 
     if y_prob < 0.20:
         risk_level = "Low Risk"
