@@ -77,7 +77,7 @@ if st.button("🔮 Predict Risk"):
         input_df = pd.DataFrame([all_inputs])
 
         y_pred = pipeline.predict(input_df)[0]
-        y_prob = float(pipeline.predict_proba(input_df)[0][1]) / 3
+        y_prob = float(pipeline.predict_proba(input_df)[0][1]) 
 
 
     if y_prob < 0.20:
